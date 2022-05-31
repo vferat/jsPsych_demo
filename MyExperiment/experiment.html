@@ -2,19 +2,111 @@
 <html>
   <head>
     <title>My experiment</title>
-    <script src="jspsych/jspsych.js"></script>
-    <script src="jspsych/plugin-html-keyboard-response.js"></script>
-    <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/jspsych@7.2.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.1"></script>
+    <link href="https://unpkg.com/jspsych@7.2.3/css/jspsych.css" rel="stylesheet" type="text/css" />
   </head>
   <body></body>
   <script>
-    const jsPsych = initJsPsych();
 
-    const hello_trial = {
+    /* initialize jsPsych */
+    var jsPsych = initJsPsych({
+      on_finish: function() {
+        jsPsych.data.displayData();
+      }
+    });
+
+    /* create timeline */
+    var timeline = [];
+
+    /* define welcome message trial */
+    var welcome = {
       type: jsPsychHtmlKeyboardResponse,
-      stimulus: 'Hello world!'
-    }
+      stimulus: "Welcome to the experiment. Press any key to begin."
+    };
+    timeline.push(welcome);
 
-    jsPsych.run([hello_trial]);
+    /* define instructions trial */
+    var instructions = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p>In this experiment, a letter will appear in the center 
+            of the screen.</p>
+            <p>If the letter is <strong>X</strong>, do not press any button on the keyboard.</p>
+            <p>If the letter is <strong>any other letter</strong>,  press the space bar on your keyboard as fast as you can.</p>
+            <p>Press any key to begin.</p>`,
+      post_trial_gap: 2000
+    };
+    timeline.push(instructions);
+
+    /* define trial stimuli array for timeline variables */
+    var test_stimuli = [
+      { stimulus: '<div style="font-size:60px;">X</div>', 
+       correct_response: "NO_KEYS"},
+      { stimulus: function(){return jsPsych.randomization.sampleWithoutReplacement(['<div style="font-size:60px;">A</div>', '<div style="font-size:60px;">B</div>', '<div style="font-size:60px;">C</div>', '<div style="font-size:60px;">D</div>'], 1)[0];
+      }, 
+       correct_response: ' '}
+    ];
+
+    /* define fixation and test trials */
+    var fixation = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '<div style="font-size:60px;">+</div>',
+      choices: "NO_KEYS",
+      trial_duration: function(){
+        return jsPsych.randomization.sampleWithoutReplacement([800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200], 1)[0];
+      },
+      data: {
+        task: 'fixation'
+      }
+    };
+
+    var test = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: jsPsych.timelineVariable('stimulus'),
+      choices: ['NO_KEYS', ' '],
+      data: {
+        task: 'response',
+        correct_response: jsPsych.timelineVariable('correct_response')
+      },
+      stimulus_duration: 200,
+      trial_duration: 800,
+      response_ends_trial: true,
+      on_finish: function(data){
+        data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
+      }
+    };
+
+    /* define test procedure */
+    var test_procedure = {
+      timeline: [fixation, test],
+      timeline_variables: test_stimuli,
+      repetitions: 5,
+      randomize_order: true
+    };
+    timeline.push(test_procedure);
+
+    /* define debrief */
+    var debrief_block = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: function() {
+
+        var trials = jsPsych.data.get().filter({task: 'response'});
+        var correct_trials = trials.filter({correct: true});
+        var accuracy = Math.round(correct_trials.count() / trials.count() * 100);
+        var rt = Math.round(correct_trials.select('rt').mean());
+
+        return `<p>You responded correctly on ${accuracy}% of the trials.</p>
+          <p>Your average response time was ${rt}ms.</p>
+          <p>Press any key to complete the experiment. Thank you!</p>`;
+
+      }
+    };
+    timeline.push(debrief_block);
+
+    /* start the experiment */
+    jsPsych.run(timeline);
+
   </script>
 </html>
+
