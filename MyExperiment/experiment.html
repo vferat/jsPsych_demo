@@ -4,6 +4,9 @@
     <title>My experiment</title>
     <script src="https://unpkg.com/jspsych@7.2.3"></script>
     <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.1"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-text"></script>
+    
     <link href="https://unpkg.com/jspsych@7.2.3/css/jspsych.css" rel="stylesheet" type="text/css" />
   </head>
   <body></body>
@@ -25,6 +28,168 @@
       stimulus: "Welcome to the experiment. Press any key to begin."
     };
     timeline.push(welcome);
+
+    // Demography
+
+    var age = {
+        type: jsPsychSurveyText,
+        questions: [
+            {prompt: 'How old are you?', required: true}
+        ]      
+    }
+    timeline.push(age);
+
+    var sex = {
+        type: jsPsychSurveyMultiChoice,
+        preamble: `Demography`,
+        questions: [
+            {
+            prompt: "Sex", 
+            name: 'sex', 
+            options: ['Male', 'Female', 'Other'], 
+            required: true,
+            horizontal: false
+            }
+        ]
+    }
+    timeline.push(sex);
+
+    // ASRS
+    var options = ['Never', 'Rarely', 'Sometimes', 'Often', 'Very Often']
+    var asrs = {
+        type: jsPsychSurveyMultiChoice,
+        preamble: `Please answer the questions below, rating yourself on each of the criteria shown. As you
+                   answer each question, select the box that best describes how you have felt and conducted
+                   yourself over the past 6 months.`,
+        questions: [
+            {
+            prompt: "How often do you have trouble wrapping up the final details of a project, once the challenging parts have been done??", 
+            name: '1', 
+            options: options, 
+            required: true,
+            horizontal: true
+            }, 
+            {
+            prompt: "How often do you have difficulty getting things in order when you have to do a task that requires organization??", 
+            name: '2', 
+            options: options, 
+            required: true,
+            horizontal: true
+            },
+            {
+            prompt: "How often do you have problems remembering appointments or obligations?", 
+            name: '3', 
+            options: options, 
+            required: true,
+            horizontal: true
+            },
+            {
+            prompt: "When you have a task that requires a lot of thought, how often do you avoid or delay getting started?", 
+            name: '4', 
+            options: options, 
+            required: true,
+            horizontal: true
+            },
+            {
+            prompt: "How often do you fidget or squirm with your hands or feet when you have to sit down for a long time?", 
+            name: '5', 
+            options: options, 
+            required: true,
+            horizontal: true
+            }, 
+            {
+            prompt: "How often do you feel overly active and compelled to do things, like you were driven by a motor?", 
+            name: '6', 
+            options: options, 
+            required: true,
+            horizontal: true
+            },
+            {
+            prompt: "How often do you make careless mistakes when you have to work on a boring or difficult project?", 
+            name: '7', 
+            options: options, 
+            required: true,
+            horizontal: true
+            },
+            {
+            prompt: "How often do you have difficulty keeping your attention when you are doing boring or repetitive work?", 
+            name: '8', 
+            options: options, 
+            required: true,
+            horizontal: true
+            },
+            {
+            prompt: "How often do you have difficulty concentrating on what people say to you, even when they are speaking to you directly?", 
+            name: '9', 
+            options: options, 
+            required: true,
+            horizontal: true
+            },
+            {
+            prompt: "How often do you misplace or have difficulty finding things at home or at work?", 
+            name: '10', 
+            options: options, 
+            required: true,
+            horizontal: true
+            },
+            {
+            prompt: "How often are you distracted by activity or noise around you?", 
+            name: '11', 
+            options: options, 
+            required: true,
+            horizontal: true
+            },
+            {
+            prompt: "How often do you leave your seat in meetings or other situations in which you are expected to remain seated?", 
+            name: '12', 
+            options: options, 
+            required: true,
+            horizontal: true
+            },
+            {
+            prompt: "How often do you feel restless or fidgety?", 
+            name: '13', 
+            options: options, 
+            required: true,
+            horizontal: true
+            },
+            {
+            prompt: "How often do you have difficulty unwinding and relaxing when you have time to yourself?", 
+            name: '14', 
+            options: options, 
+            required: true,
+            horizontal: true
+            },
+            {
+            prompt: "How often do you find yourself talking too much when you are in social situations?", 
+            name: '15', 
+            options: options, 
+            required: true,
+            horizontal: true
+            },
+            {
+            prompt: "When you’re in a conversation, how often do you find yourself finishing the sentences of the people you are talking to, before they can finish them themselves?", 
+            name: '16', 
+            options: options, 
+            required: true,
+            horizontal: true
+            },
+            {
+            prompt: "How often do you have difficulty waiting your turn in situations when turn taking is required?", 
+            name: '17', 
+            options: options, 
+            required: true,
+            horizontal: true
+            },
+            {
+            prompt: "How often do you interrupt others when they are busy?", 
+            name: '18', 
+            options: options, 
+            required: true,
+            horizontal: true
+            }]
+    };
+    timeline.push(asrs)
 
     /* define instructions trial */
     var instructions = {
