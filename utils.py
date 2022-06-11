@@ -1,0 +1,6 @@
+import spotipy
+
+token = "BQA5jBk9i6VO4zRcFnUNvaHuZGz2zCzkpCL03IrEIS3JmQFwbO2G5QDcJypVj9P871_quVvDDFCWiooBTAZuNxeg3X5jYDsGwA0YJ_NzwjwiwpI3r9F_ZeDUsfWVH_D8VKgI4xzLkFuPbi6WvU6mBjeNWLSZBaF9eQYeJQyCLpzIWMxHAdKZNXDpRCJsX72TnVBG9gD_"
+sp = spotipy.Spotify(auth=token)
+results = sp.current_user_saved_tracks()
+print(results)
