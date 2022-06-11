@@ -1,6 +1,6 @@
 import spotipy
 
-token = "BQA5jBk9i6VO4zRcFnUNvaHuZGz2zCzkpCL03IrEIS3JmQFwbO2G5QDcJypVj9P871_quVvDDFCWiooBTAZuNxeg3X5jYDsGwA0YJ_NzwjwiwpI3r9F_ZeDUsfWVH_D8VKgI4xzLkFuPbi6WvU6mBjeNWLSZBaF9eQYeJQyCLpzIWMxHAdKZNXDpRCJsX72TnVBG9gD_"
+token = "BQAtaEhMuT8-DslssetSL_EVeI3y3hpf67AZkgdE7rv0hyTH2sJx1DO0M_GHsTmU57fK-Or8TuIg8AqWpFKwQJcanHe668GSfPP8j8Ylh7-nyICyj0S_pytp2N8lbBcPFguVa74irsLqAjfuUP0hwGQh2F7lUc_lNhkvy2t1a1Ux5zes2jn2wW_Vz1cCHQJODEv9H9KBf1yZzNHR8IX39A"
 sp = spotipy.Spotify(auth=token)
-results = sp.current_user_saved_tracks()
+results = sp.current_user_recently_played(limit=50)
 print(results)
